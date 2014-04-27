@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class WBCell : MonoBehaviour {
+public class WBCell : MonoBehaviour
+{
+	public bool killDrillers = true;
 
 	// Use this for initialization
 	void Start () {
@@ -20,7 +22,15 @@ public class WBCell : MonoBehaviour {
 
 	void OnCollisionEnter(Collision col)
 	{
-		if(col.collider.tag == "virus")
+		if(col.collider.tag == "driller")
+		{
+			Destroy(gameObject);
+			if(killDrillers)
+			{
+				Destroy(col.collider.gameObject);
+			}
+		}
+		else if(col.collider.tag == "virus")
 		{
             Destroy(col.collider.gameObject);
         }
