@@ -31,7 +31,7 @@ public class Moveable : MonoBehaviour {
 
 	void HandleMusicPulseOccurred ()
 	{
-		nextPosition = transform.position + direction * moveSpeed *  _musicController.TimeTilNextTick;
+		nextPosition = transform.position + direction * moveSpeed *  _musicController.TimeTilNextTick + velocity * _musicController.TimeTilNextTick;
 	}
 
 	// Update is called once per frame
