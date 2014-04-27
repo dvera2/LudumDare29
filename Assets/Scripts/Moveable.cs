@@ -13,6 +13,8 @@ public class Moveable : MonoBehaviour {
 	private Vector3 nextPosition;
 	private Vector3 velocity;
 
+	private bool hasCollided = false;
+
 	void OnDestroy()
 	{
 		if(_musicController)
@@ -27,11 +29,29 @@ public class Moveable : MonoBehaviour {
 			_musicController = MusicController.Instance;
 
 		_musicController.MusicPulseOccurred += HandleMusicPulseOccurred;
+
+	}
+
+	void Start()
+	{
+		nextPosition = transform.position + direction * moveSpeed * _musicController.TimeTilNextTick;
 	}
 
 	void HandleMusicPulseOccurred ()
 	{
-		nextPosition = transform.position + direction * moveSpeed *  _musicController.TimeTilNextTick + velocity * _musicController.TimeTilNextTick;
+		if(hasCollided)
+		   	nextPosition = transform.position + rigidbody.velocity.normalized * rigidbody.velocity.magnitude * _musicController.TimeTilNextTick;
+		else
+			nextPosition = transform.position + direction * moveSpeed * _musicController.TimeTilNextTick; // + velocity * _musicController.TimeTilNextTick;
+
+	}
+
+	void OnCollisionEnter(Collision col)
+	{
+		if(gameObject.layer == LayerMask.NameToLayer("RBC"))
+		   return;
+
+		hasCollided = true;
 	}
 
 	// Update is called once per frame
