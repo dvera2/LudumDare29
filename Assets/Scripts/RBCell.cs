@@ -9,13 +9,17 @@ public class RBCell : MonoBehaviour {
 	void Awake()
 	{
 		moveable = GetComponent<Moveable> ();
+
 	}
 
 	void OnDestroy()
 	{
-		foreach(var glommer in childGlommers)
+		if(childGlommers != null)
 		{
-			Destroy(glommer);
+			foreach(var glommer in childGlommers)
+			{
+				Destroy(glommer);
+			}
 		}
 	}
 
