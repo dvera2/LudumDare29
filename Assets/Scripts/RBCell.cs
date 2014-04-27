@@ -41,7 +41,11 @@ public class RBCell : MonoBehaviour {
 
 			// let physics take over for me
 			rigidbody.isKinematic = false;
-			moveable._usesMusicController = false;
+
+			if(moveable)
+			{
+				moveable._usesMusicController = false;
+			}
 			Destroy (objMoveable);
 		}
 		else if(obj.layer == LayerMask.NameToLayer("WBC"))
