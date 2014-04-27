@@ -13,4 +13,12 @@ public class RBCell : MonoBehaviour {
 			Destroy(gameObject);
 		}
 	}
+
+	void Update()
+	{
+		if(transform.position.y > 7.0f || transform.position.y < -7.0f)
+		{
+			Destroy (gameObject);
+		}
+	}
 }

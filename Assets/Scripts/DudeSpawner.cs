@@ -35,7 +35,7 @@ public class DudeSpawner : MonoBehaviour {
 	// Update is called once per frame
 	protected virtual void Update () {
 		_elapsedTime += Time.deltaTime;
-		if(_elapsedTime >= _timeToSpawn) {
+		if(_elapsedTime >= _timeToSpawn + Random.Range(-0.2f, 0.2f) * (1.0f / spawnRatePerSecond)) {
 
 			var info = GetNextPrefab();
 			if(info == null)
@@ -48,7 +48,7 @@ public class DudeSpawner : MonoBehaviour {
 			inst.name = info.ID;
 			inst.transform.parent = transform;
 			inst.transform.position = spawnPoint.position;
-			var moveable = inst.GetComponent<Moveable>();
+			var moveable = inst.GetComponentInChildren<Moveable>();
 			if(moveable) moveable.direction = spawnDirection;
 
 			ScheduleNext();
