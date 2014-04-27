@@ -10,11 +10,17 @@ public class Moveable : MonoBehaviour {
 
 	public bool _usesMusicController = false;
 
+	public Vector3 target;
 	private Vector3 nextPosition;
 	private Vector3 velocity;
 
 	private bool hasCollided = false;
 
+	void OnStart()
+	{
+		target = direction * 100;
+	}
+			
 	void OnDestroy()
 	{
 		if(_musicController)
@@ -39,13 +45,19 @@ public class Moveable : MonoBehaviour {
 
 	void HandleMusicPulseOccurred ()
 	{
+//		if(hasCollided)
+//		   	nextPosition = transform.position + rigidbody.velocity.normalized * rigidbody.velocity.magnitude * _musicController.TimeTilNextTick;
+//		else
+//			nextPosition = transform.position + direction * moveSpeed * _musicController.TimeTilNextTick; // + velocity * _musicController.TimeTilNextTick;
 		if(hasCollided)
-		   	nextPosition = transform.position + rigidbody.velocity.normalized * rigidbody.velocity.magnitude * _musicController.TimeTilNextTick;
-		else
-			nextPosition = transform.position + direction * moveSpeed * _musicController.TimeTilNextTick; // + velocity * _musicController.TimeTilNextTick;
+		{
+			hasCollided = false;
+			rigidbody.velocity = Vector3.zero;
+		}
+		nextPosition = transform.position + direction * moveSpeed * _musicController.TimeTilNextTick; // + velocity * _musicController.TimeTilNextTick;
 
 	}
-
+	
 	void OnCollisionEnter(Collision col)
 	{
 		if(gameObject.layer == LayerMask.NameToLayer("RBC"))
@@ -57,7 +69,12 @@ public class Moveable : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
 	{
-		if(_usesMusicController)
+//		var look = transform;
+//		look.LookAt(target);
+//		transform.rotation = Quaternion.Slerp(transform.rotation, look.rotation, Time.deltaTime);
+//		transform.Rotate(new Vector3(0, 90, 0));
+
+		if(_usesMusicController && !hasCollided)
 		{
 			if(_musicController.ShouldMoveThisFrame)
 			{
