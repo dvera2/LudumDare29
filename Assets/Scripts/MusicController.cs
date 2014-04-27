@@ -43,6 +43,7 @@ public class MusicController : MonoBehaviour {
 		}
 		set
         {
+			_bpm = value;
             _heartbeatTime = 60.0f / value;
         }
     }
