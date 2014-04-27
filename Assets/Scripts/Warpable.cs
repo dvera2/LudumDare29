@@ -13,7 +13,7 @@ public class Warpable : MonoBehaviour {
 	private Vector3 nextScale = Vector3.one;
 	private Vector3 velocity;
 
-	private bool flipTheScale = false;
+//	private bool flipTheScale = false;
 	
 	void OnDestroy()
 	{

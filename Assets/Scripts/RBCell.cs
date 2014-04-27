@@ -1,27 +1,55 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public class RBCell : MonoBehaviour {
 
 	private Moveable moveable;
+	private List<GameObject> childGlommers;
 
 	void Awake()
 	{
 		moveable = GetComponent<Moveable> ();
 	}
 
+	void OnDestroy()
+	{
+		foreach(var glommer in childGlommers)
+		{
+			Destroy(glommer);
+		}
+	}
+
 	void OnCollisionEnter(Collision col)
 	{
-		if (col.collider.gameObject.layer == LayerMask.NameToLayer ("Glommer"))
-		{
-			Destroy (GetComponent<Moveable> ());
-		}
-
 		Debug.Log ("collision happened: " + col.collider.name);
-        if(col.collider.tag == "wall")
+
+		var obj = col.collider.gameObject;
+		if(obj.layer == LayerMask.NameToLayer("Glommer"))
 		{
-			Debug.Log ("collision happened: " + col.collider.name);
-			Destroy(gameObject);
+			// re-parent the glommer
+			var objMoveable = obj.GetComponent<Moveable> ();
+			if (childGlommers == null) {
+					childGlommers = new List<GameObject> ();
+			}
+			childGlommers.Add (obj);
+			obj.transform.parent = rigidbody.transform;
+			obj.rigidbody.isKinematic = true;
+			obj.layer = LayerMask.NameToLayer("RBC");
+
+			// TODO: set vel based on collision forces
+//			var objPos = objMoveable.transform.position;
+
+			// let physics take over for me
+			rigidbody.isKinematic = false;
+			moveable._usesMusicController = false;
+			Destroy (objMoveable);
+		}
+		else if(obj.layer == LayerMask.NameToLayer("WBC"))
+		{
+			if(childGlommers != null && childGlommers.Count > 0)
+			{
+				Destroy(gameObject);
+			}
 		}
 	}
 
@@ -30,29 +58,30 @@ public class RBCell : MonoBehaviour {
 		if(transform.position.y > 7.0f || transform.position.y < -7.0f)
 		{
 			Destroy (gameObject);
+			return;
 		}
 
 		if(!moveable)
 			return;
 
-		var box = GetComponent<BoxCollider>();
-		var tip = transform.position;
-		tip.y += box.bounds.extents.y;
-
-		RaycastHit[] hits;
-		hits = Physics.RaycastAll (new Ray (tip, moveable.direction), 1.0f);
-
-		bool shouldStop = false;
-		if(hits != null)
-		{
-			foreach(var hit in hits)
-			{
-				if(hit.collider.gameObject.layer == LayerMask.NameToLayer("Glommer"))
-					shouldStop = true;
-			}
-		}
-
-		if(shouldStop)
-			Destroy (moveable);
+//		var box = GetComponent<BoxCollider>();
+//		var tip = transform.position;
+//		tip.y += box.bounds.extents.y;
+//
+//		RaycastHit[] hits;
+//		hits = Physics.RaycastAll (new Ray (tip, moveable.direction), 0.1f);
+//
+//		bool shouldStop = false;
+//		if(hits != null)
+//		{
+//			foreach(var hit in hits)
+//			{
+//				if(hit.collider.gameObject.layer == LayerMask.NameToLayer("Glommer"))
+//					shouldStop = true;
+//			}
+//		}
+//
+//		if(shouldStop)
+//			Destroy (moveable);
 	}
 }
