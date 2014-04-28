@@ -25,8 +25,6 @@ public class RBCell : MonoBehaviour {
 
 	void OnCollisionEnter(Collision col)
 	{
-		Debug.Log ("collision happened: " + col.collider.name);
-
 		var obj = col.collider.gameObject;
 		if(obj.layer == LayerMask.NameToLayer("Glommer"))
 		{
@@ -36,7 +34,7 @@ public class RBCell : MonoBehaviour {
 					childGlommers = new List<GameObject> ();
 			}
 			childGlommers.Add (obj);
-			obj.transform.parent = rigidbody.transform;
+			obj.transform.parent = transform;
 			obj.rigidbody.isKinematic = true;
 			obj.layer = LayerMask.NameToLayer("RBC");
 
@@ -56,6 +54,7 @@ public class RBCell : MonoBehaviour {
 		{
 			if(childGlommers != null && childGlommers.Count > 0)
 			{
+				gameObject.GetComponent<AudioSource>().Play();
 				Destroy(gameObject);
 			}
 		}

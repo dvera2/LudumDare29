@@ -45,17 +45,25 @@ public class Moveable : MonoBehaviour {
 
 	void HandleMusicPulseOccurred ()
 	{
-//		if(hasCollided)
-//		   	nextPosition = transform.position + rigidbody.velocity.normalized * rigidbody.velocity.magnitude * _musicController.TimeTilNextTick;
-//		else
-//			nextPosition = transform.position + direction * moveSpeed * _musicController.TimeTilNextTick; // + velocity * _musicController.TimeTilNextTick;
-		if(hasCollided)
+		// new pulse; disable physics
+		if (hasCollided)
 		{
 			hasCollided = false;
-			rigidbody.velocity = Vector3.zero;
+			//StartCoroutine(DeferZeroVelocity());
 		}
 		nextPosition = transform.position + direction * moveSpeed * _musicController.TimeTilNextTick; // + velocity * _musicController.TimeTilNextTick;
+	}
 
+	IEnumerator DeferZeroVelocity()
+	{
+		yield return new WaitForEndOfFrame ();
+//		if(hasCollided)
+		{
+			hasCollided = false;
+			rigidbody.isKinematic = false;
+			rigidbody.velocity = Vector3.zero;
+			rigidbody.isKinematic = true;
+		}
 	}
 	
 	void OnCollisionEnter(Collision col)

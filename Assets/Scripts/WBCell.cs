@@ -22,17 +22,21 @@ public class WBCell : MonoBehaviour
 
 	void OnCollisionEnter(Collision col)
 	{
-		if(col.collider.tag == "driller")
+		GameObject collidedObject = col.collider.gameObject;
+		Debug.Log(string.Format("killing {0}", collidedObject.tag));
+		if(collidedObject.tag == "driller")
 		{
 			Destroy(gameObject);
 			if(killDrillers)
 			{
-				Destroy(col.collider.gameObject);
+				collidedObject.GetComponent<AudioSource>().Play();
+				Destroy(collidedObject);
 			}
 		}
-		else if(col.collider.tag == "virus")
+		else if(collidedObject.tag == "eater" || collidedObject.tag == "glommer")
 		{
-            Destroy(col.collider.gameObject);
-        }
-    }
+			collidedObject.GetComponent<AudioSource>().Play();
+			Destroy(collidedObject);
+		}
+	}
 }
